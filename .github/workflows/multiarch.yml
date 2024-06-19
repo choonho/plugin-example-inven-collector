@@ -13,7 +13,7 @@ env:
 
 jobs:
   x86-build:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
             sunshout/myplugin:x86
 
   arm-build:
-    run-on: macos-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
