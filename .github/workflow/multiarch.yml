@@ -1,0 +1,72 @@
+name: "[Dispatch] Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'enter version(x.y.z)'
+        required: true
+        default: '0.1.0'
+
+env:
+  VERSION: ${{ github.event.inputs.version }}
+
+jobs:
+  x86-build:
+    run-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: |
+            sunshout/myplugin:x86
+
+  arm-build:
+    run-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          platforms: linux/arm64
+          tags: |
+            sunshout/myplugin:arm64
+
+  manifest:
+    needs: [x86-build, arm-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge Docker Manifest
+        uses: Noelware/docker-manifest-action@master
+        with:
+          inputs: sunshout/myplugin:${{ env.VERSION }}
+          images: sunshout/myplugin:amd64,sunshout/myplugin:arm64
+          push: true
