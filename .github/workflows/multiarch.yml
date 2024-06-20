@@ -28,14 +28,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: |
-            sunshout/myplugin:x86
-          build-args: |
-            ARCH=amd64
+        run: |
+          docker build -t sunshout/myplugin:amd64 --build-arg ARCH=amd64 .
+          docker push sunshout/myplugin:arm64
 
   arm-build:
     runs-on: [self-hosted, linux, ARM64]
@@ -53,14 +48,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: |
-            sunshout/myplugin:arm64
-          build-args: |
-            ARCH=arm64v8
+        run: |
+          docker build -t sunshout/myplugin:arm64 --build-arg ARCH=arm64v8 .
+          docker push sunshout/myplugin:arm64
 
   manifest:
     needs: [x86-build, arm-build]
@@ -77,5 +67,5 @@ jobs:
 
       - name: Merge Docker Manifest
         run: |
-          docker manifest create sunshout/myplugin:${{ env.VERSION }} --amend sunshout/myplugin:x86 --amend sunshout/myplugin:arm64
+          docker manifest create sunshout/myplugin:${{ env.VERSION }} --amend sunshout/myplugin:amd64 --amend sunshout/myplugin:arm64
           docker manifest push sunshout/myplugin:${{ env.VERSION }}
