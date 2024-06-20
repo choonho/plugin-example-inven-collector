@@ -68,5 +68,5 @@ jobs:
         uses: Noelware/docker-manifest-action@master
         with:
           inputs: sunshout/myplugin:${{ env.VERSION }}
-          images: sunshout/myplugin:amd64,sunshout/myplugin:arm64
+          images: sunshout/myplugin:x86,sunshout/myplugin:arm64
           push: true
