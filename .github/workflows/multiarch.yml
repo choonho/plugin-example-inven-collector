@@ -37,7 +37,7 @@ jobs:
             sunshout/myplugin:x86
 
   arm-build:
-    runs-on: macos-latest
+    runs-on: [self-hosted, linux, ARM64]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
