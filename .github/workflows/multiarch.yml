@@ -30,7 +30,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t sunshout/myplugin:amd64 --build-arg ARCH=amd64 .
-          docker push sunshout/myplugin:arm64
+          docker push sunshout/myplugin:amd64
 
   arm-build:
     runs-on: [self-hosted, linux, ARM64]
