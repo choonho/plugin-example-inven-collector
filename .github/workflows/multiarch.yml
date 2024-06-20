@@ -79,3 +79,4 @@ jobs:
           inputs: sunshout/myplugin:${{ env.VERSION }}
           images: sunshout/myplugin:x86,sunshout/myplugin:arm64
           push: true
+          amend: true
