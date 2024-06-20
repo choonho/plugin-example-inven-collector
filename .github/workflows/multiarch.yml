@@ -32,9 +32,10 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64
           tags: |
             sunshout/myplugin:x86
+          build-args: |
+            ARCH=amd64
 
   arm-build:
     runs-on: [self-hosted, linux, ARM64]
@@ -56,9 +57,10 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/arm64
           tags: |
             sunshout/myplugin:arm64
+          build-args: |
+            ARCH=arm64v8
 
   manifest:
     needs: [x86-build, arm-build]
