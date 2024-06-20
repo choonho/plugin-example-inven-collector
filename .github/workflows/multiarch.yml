@@ -74,9 +74,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Merge Docker Manifest
-        uses: Noelware/docker-manifest-action@master
-        with:
-          inputs: sunshout/myplugin:${{ env.VERSION }}
-          images: sunshout/myplugin:x86,sunshout/myplugin:arm64
-          push: true
-          amend: true
+        run: |
+          docker manifest create sunshout/myplugin:${{ env.VERSION }} --amend sunshout/myplugin:x86 --amend sunshout/myplugin:arm64
+          docker manifest push sunshout/myplugin:${{ env.VERSION }}
